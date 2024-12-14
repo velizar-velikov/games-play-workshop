@@ -41,3 +41,5 @@ const gamesAPI = {
     updateById,
     deleteById,
 };
+
+export default gamesAPI;
