@@ -1,4 +1,18 @@
+import { useEffect, useState } from 'react';
+import gamesAPI from '../../api/games-api.js';
+import GameItemHome from './game-item-home/GameItemHome.jsx';
+
 export default function Home() {
+    const [games, setGames] = useState([]);
+
+    useEffect(() => {
+        async function loadLatestGames() {
+            const games = await gamesAPI.getNew();
+            setGames(games);
+        }
+        loadLatestGames();
+    }, []);
+
     return (
         <section id="welcome-world">
             <div className="welcome-message">
@@ -10,64 +24,11 @@ export default function Home() {
             <div id="home-page">
                 <h1>Latest Games</h1>
 
-                {/* <!-- Display div: with information about every game (if any) --> */}
-                <div className="game">
-                    <div className="image-wrap">
-                        <img src="./images/CoverFire.png" />
-                    </div>
-                    <h3>Cover Fire</h3>
-                    <div className="rating">
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                    </div>
-                    <div className="data-buttons">
-                        <a href="#" className="btn details-btn">
-                            Details
-                        </a>
-                    </div>
-                </div>
-                <div className="game">
-                    <div className="image-wrap">
-                        <img src="./images/ZombieLang.png" />
-                    </div>
-                    <h3>Zombie Lang</h3>
-                    <div className="rating">
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                    </div>
-                    <div className="data-buttons">
-                        <a href="#" className="btn details-btn">
-                            Details
-                        </a>
-                    </div>
-                </div>
-                <div className="game">
-                    <div className="image-wrap">
-                        <img src="./images/MineCraft.png" />
-                    </div>
-                    <h3>MineCraft</h3>
-                    <div className="rating">
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                        <span>☆</span>
-                    </div>
-                    <div className="data-buttons">
-                        <a href="#" className="btn details-btn">
-                            Details
-                        </a>
-                    </div>
-                </div>
-
-                {/* <!-- Display paragraph: If there is no games  --> */}
-                <p className="no-articles">No games yet</p>
+                {games.length == 0 ? (
+                    <p className="no-articles">No games yet</p>
+                ) : (
+                    games.map((game) => <GameItemHome key={game._id} {...game} />)
+                )}
             </div>
         </section>
     );
