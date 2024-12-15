@@ -18,9 +18,16 @@ function App() {
         setCurrentUser(state);
     };
 
+    const contextData = {
+        email: currentUser.email,
+        accessToken: currentUser.accessToken,
+        isAuthenticated: Boolean(currentUser.email),
+        changeAuthState,
+    };
+
     return (
         <div id="box">
-            <UserContext.Provider value={{ changeAuthState }}>
+            <UserContext.Provider value={contextData}>
                 <Header />
                 <main id="main-content">
                     <Routes>
