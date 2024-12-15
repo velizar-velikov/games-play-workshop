@@ -5,6 +5,7 @@ const host = 'http://localhost:3030';
 const endpoints = {
     register: '/users/register',
     login: '/users/login',
+    logout: 'users/logout',
 };
 
 async function register(email, password) {
@@ -15,9 +16,14 @@ async function login(email, password) {
     return requester.post(host + endpoints.login, { email, password });
 }
 
-const userAPI = {
+async function logout() {
+    return requester.get(host + endpoints.logout);
+}
+
+const authAPI = {
     register,
     login,
+    logout,
 };
 
-export default userAPI;
+export default authAPI;

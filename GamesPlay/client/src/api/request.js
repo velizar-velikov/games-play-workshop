@@ -13,7 +13,8 @@ async function request(method, url, data) {
         const response = await fetch(url, options);
 
         if (!response.ok) {
-            throw response;
+            const error = await response.json();
+            throw error;
         }
 
         if (response.status == 204) {

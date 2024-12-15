@@ -14,9 +14,13 @@ import { useState } from 'react';
 function App() {
     const [currentUser, setCurrentUser] = useState({});
 
+    const changeAuthState = (state) => {
+        setCurrentUser(state);
+    };
+
     return (
         <div id="box">
-            <UserContext.Provider value={{ user: currentUser }}>
+            <UserContext.Provider value={{ changeAuthState }}>
                 <Header />
                 <main id="main-content">
                     <Routes>
