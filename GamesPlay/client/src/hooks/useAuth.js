@@ -7,7 +7,7 @@ export function useRegister() {
 
     const registerHandler = async (email, password) => {
         const result = await authAPI.register(email, password);
-        changeAuthState(result);
+        changeAuthState({ _id: result._id, email: result.email, accessToken: result.accessToken });
         return result;
     };
 
@@ -19,7 +19,7 @@ export function useLogin() {
 
     const loginHandler = async (email, password) => {
         const result = await authAPI.login(email, password);
-        changeAuthState(result);
+        changeAuthState({ _id: result._id, email: result.email, accessToken: result.accessToken });
         return result;
     };
 
