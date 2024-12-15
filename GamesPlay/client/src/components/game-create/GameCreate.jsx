@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../../hooks/useform.js';
 import gamesAPI from '../../api/games-api.js';
+import { useCreateGame } from '../../hooks/useGames.js';
 
 const intitialValues = {
     title: '',
@@ -11,14 +12,20 @@ const intitialValues = {
 };
 
 export default function GameCreate() {
+    const createGame = useCreateGame();
     const navigate = useNavigate();
-    async function createSubmitHandler(values) {
+    async function createHandler(values) {
         console.log(values);
-        await gamesAPI.create(values);
-        navigate('/');
+        try {
+            await createGame(values);
+            navigate('/');
+        } catch (err) {
+            // TODO: set error state and display error
+            console.log(err);
+        }
     }
 
-    const { values, changeHandler, submitHandler } = useForm(intitialValues, createSubmitHandler);
+    const { values, changeHandler, submitHandler } = useForm(intitialValues, createHandler);
 
     return (
         <section id="create-page" className="auth">
