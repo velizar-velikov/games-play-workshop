@@ -20,7 +20,7 @@ export function useGetLatestGames() {
 
     useEffect(() => {
         async function loadLatestGames() {
-            const games = await gamesAPI.getNew();
+            const games = await gamesAPI.getNew(3);
             setGames(games);
         }
         loadLatestGames();

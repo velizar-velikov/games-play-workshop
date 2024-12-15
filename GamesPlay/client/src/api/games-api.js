@@ -2,9 +2,22 @@ import requester from './request.js';
 
 const host = 'http://localhost:3030';
 
+function buildNewGamesUrl(pageSize = 3) {
+    const urlParams = new URLSearchParams({
+        sortBy: '_createdOn%20desc',
+        distinct: 'category',
+        offset: '0',
+        pageSize: pageSize.toString(),
+    });
+
+    const url = new URL(host + '/data/games');
+    url.search = decodeURIComponent(urlParams);
+
+    return url;
+}
+
 const endpoints = {
     all: '/data/games?sortBy=_createdOn%20desc',
-    new: '/data/games?sortBy=_createdOn%20desc&distinct=category',
     create: '/data/games',
     one: (id) => `/data/games/${id}`,
 };
@@ -13,8 +26,8 @@ async function getAll() {
     return requester.get(host + endpoints.all);
 }
 
-async function getNew() {
-    return requester.get(host + endpoints.new);
+async function getNew(pageSize) {
+    return requester.get(buildNewGamesUrl(pageSize));
 }
 
 async function getOne(gameId) {
