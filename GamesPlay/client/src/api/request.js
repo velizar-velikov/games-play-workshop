@@ -12,6 +12,10 @@ async function request(method, url, data) {
     try {
         const response = await fetch(url, options);
 
+        if (!response.ok) {
+            throw response;
+        }
+
         if (response.status == 204) {
             return response;
         }
