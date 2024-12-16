@@ -7,6 +7,7 @@ export const UserContext = createContext({
     accessToken: '',
     isAuthenticated: false,
     changeAuthState: (authState = {}) => null,
+    logout: () => null,
 });
 
 export function UserContextProvider(props) {
@@ -22,11 +23,16 @@ export function UserContextProvider(props) {
         setCurrentUser(state);
     };
 
+    const logout = () => {
+        setCurrentUser(null);
+    };
+
     const contextData = {
-        email: currentUser.email,
-        accessToken: currentUser.accessToken,
-        isAuthenticated: Boolean(currentUser.email),
+        email: currentUser?.email,
+        accessToken: currentUser?.accessToken,
+        isAuthenticated: Boolean(currentUser?.email),
         changeAuthState,
+        logout,
     };
 
     return (

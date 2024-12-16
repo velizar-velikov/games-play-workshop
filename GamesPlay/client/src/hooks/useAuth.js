@@ -34,12 +34,13 @@ export function useLogin() {
 }
 
 export function useLogout() {
-    const { changeAuthState } = useUserContext();
+    const { logout: localLogout } = useUserContext();
 
     const logoutHandler = async () => {
-        const result = await authAPI.logout();
-        changeAuthState({});
-        return result;
+        // server logout
+        await authAPI.logout();
+        // logout from state
+        localLogout();
     };
 
     return logoutHandler;

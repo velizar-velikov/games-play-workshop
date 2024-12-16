@@ -5,7 +5,7 @@ const host = 'http://localhost:3030';
 const endpoints = {
     register: '/users/register',
     login: '/users/login',
-    logout: 'users/logout',
+    logout: '/users/logout',
 };
 
 async function register(email, password) {
