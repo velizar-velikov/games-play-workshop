@@ -1,9 +1,8 @@
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import UserContext from '../../contexts/UserContext.js';
+import { useUserContext } from '../../contexts/UserContext.jsx';
 
 export default function Header() {
-    const { isAuthenticated } = useContext(UserContext);
+    const { isAuthenticated } = useUserContext();
 
     return (
         <header>
