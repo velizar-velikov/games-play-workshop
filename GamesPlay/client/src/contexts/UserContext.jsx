@@ -14,12 +14,6 @@ export function UserContextProvider(props) {
     const [currentUser, setCurrentUser] = usePersistedState('auth', {});
 
     const changeAuthState = (state) => {
-        // TODO: Quick fix, fix by implementing persisted authState
-        if (state.accessToken) {
-            localStorage.setItem('accessToken', state.accessToken);
-        } else {
-            localStorage.removeItem('accessToken');
-        }
         setCurrentUser(state);
     };
 

@@ -1,10 +1,12 @@
+import { getAccessToken } from '../utils/authData.js';
+
 async function request(method, url, data) {
     const options = {
         method,
         headers: {},
     };
 
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = getAccessToken();
 
     if (accessToken) {
         options.headers['X-Authorization'] = accessToken;
@@ -19,6 +21,10 @@ async function request(method, url, data) {
         const response = await fetch(url, options);
 
         if (!response.ok) {
+            if (response.status == 403) {
+                // unauthorized
+                localStorage.removeItem('accessToken');
+            }
             const error = await response.json();
             throw error;
         }
