@@ -13,21 +13,12 @@ export const UserContext = createContext({
 export function UserContextProvider(props) {
     const [currentUser, setCurrentUser] = usePersistedState('auth', {});
 
-    const changeAuthState = (state) => {
-        setCurrentUser(state);
-    };
-
-    const logout = () => {
-        setCurrentUser(null);
-    };
-
     const contextData = {
         userId: currentUser?._id,
         email: currentUser?.email,
         accessToken: currentUser?.accessToken,
         isAuthenticated: Boolean(currentUser?.email),
-        changeAuthState,
-        logout,
+        changeAuthState: (state) => setCurrentUser(state),
     };
 
     return (

@@ -1,6 +1,5 @@
 import { useUserContext } from '../contexts/UserContext.jsx';
 import authAPI from '../api/auth-api.js';
-import { useEffect, useState } from 'react';
 
 export function useRegister() {
     const { changeAuthState } = useUserContext();
@@ -35,10 +34,10 @@ export function useLogin() {
 }
 
 export function useLogout() {
-    const { logout: localLogout } = useUserContext();
+    const { changeAuthState } = useUserContext();
 
     const logoutHandler = async () => {
-        localLogout();
+        changeAuthState(null);
         await authAPI.logout();
     };
 
