@@ -1,12 +1,37 @@
 import { Link, useParams } from 'react-router-dom';
 import { useGetOneGame } from '../../hooks/useGames.js';
-import { useGetComments } from '../../hooks/useComments.js';
+import { useCreateComment, useGetComments } from '../../hooks/useComments.js';
+import { useForm } from '../../hooks/useform.js';
+import { useUserContext } from '../../contexts/UserContext.jsx';
+import { useGetUser } from '../../hooks/useAuth.js';
+
+const initialValues = {
+    comment: '',
+};
 
 export default function GameDetails() {
     const { gameId } = useParams();
 
-    const [comments, setComments] = useGetComments(gameId);
     const [game, setGame] = useGetOneGame(gameId);
+    const [comments, setComments] = useGetComments(gameId);
+
+    const { userId, isAuthenticated } = useUserContext();
+
+    const isOwner = userId == game._ownerId;
+    const canComment = isAuthenticated && !isOwner;
+
+    const createComment = useCreateComment();
+
+    const commentSubmitHandler = async ({ comment }) => {
+        try {
+            const newComment = await createComment(gameId, comment);
+            setComments((oldComments) => [...oldComments, newComment]);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const { values, changeHandler, submitHandler } = useForm(initialValues, commentSubmitHandler);
 
     return (
         <section id="game-details">
@@ -21,11 +46,8 @@ export default function GameDetails() {
 
                 <p className="text">{game.summary}</p>
 
-                {/* <!-- Bonus ( for Guests and Users ) --> */}
                 <div className="details-comments">
                     <h2>Comments:</h2>
-                    {/* <!-- list all comments for current game (If any) --> */}
-                    {/* <!-- Display paragraph: If there are no games in the database --> */}
                     {comments.length == 0 ? (
                         <p className="no-comment">No comments.</p>
                     ) : (
@@ -37,34 +59,44 @@ export default function GameDetails() {
                     )}
                 </div>
 
-                {/* <!-- Edit/Delete buttons ( Only for creator of this game )  --> */}
-                <div className="buttons">
-                    <Link to={`/games/${game._id}/edit`} className="button">
-                        Edit
-                    </Link>
-                    <Link to={`/games/${game._id}/delete`} className="button">
-                        Delete
-                    </Link>
-                </div>
+                {isOwner && (
+                    <div className="buttons">
+                        <Link to={`/games/${game._id}/edit`} className="button">
+                            Edit
+                        </Link>
+                        <Link to={`/games/${game._id}/delete`} className="button">
+                            Delete
+                        </Link>
+                    </div>
+                )}
             </div>
 
-            {/* <!-- Bonus --> */}
-            {/* <!-- Add Comment ( Only for logged-in users, which is not creators of the current game ) --> */}
-            <article className="create-comment">
-                <label>Add new comment:</label>
-                <form className="form">
-                    <textarea name="comment" placeholder="Comment......"></textarea>
-                    <input className="btn submit" type="submit" value="Add Comment" />
-                </form>
-            </article>
+            {canComment && (
+                <article className="create-comment">
+                    <label>Add new comment:</label>
+                    <form onSubmit={submitHandler} className="form">
+                        <textarea
+                            name="comment"
+                            placeholder="Comment......"
+                            value={values.comment}
+                            onChange={changeHandler}
+                        ></textarea>
+                        <input className="btn submit" type="submit" value="Add Comment" />
+                    </form>
+                </article>
+            )}
         </section>
     );
 }
 
-function Comment({ text }) {
+function Comment({ _ownerId, comment }) {
+    const [user] = useGetUser(_ownerId);
+
     return (
         <li className="comment">
-            <p>Content: {text}</p>
+            <p>
+                {user.email}: {comment}
+            </p>
         </li>
     );
 }

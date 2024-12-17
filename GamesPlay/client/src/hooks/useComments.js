@@ -14,3 +14,12 @@ export function useGetComments(gameId) {
 
     return [comments, setComments];
 }
+
+export function useCreateComment() {
+    const createHandler = async (gameId, comment) => {
+        const newComment = await commentsAPI.create(gameId, comment);
+        return newComment;
+    };
+
+    return createHandler;
+}

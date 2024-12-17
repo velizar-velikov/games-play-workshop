@@ -23,7 +23,7 @@ async function request(method, url, data) {
         if (!response.ok) {
             if (response.status == 403) {
                 // unauthorized
-                localStorage.removeItem('accessToken');
+                localStorage.removeItem('auth');
             }
             const error = await response.json();
             throw error;

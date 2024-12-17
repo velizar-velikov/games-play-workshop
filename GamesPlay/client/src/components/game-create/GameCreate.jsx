@@ -15,7 +15,6 @@ export default function GameCreate() {
     const createGame = useCreateGame();
     const navigate = useNavigate();
     async function createHandler(values) {
-        console.log(values);
         try {
             await createGame(values);
             navigate('/');

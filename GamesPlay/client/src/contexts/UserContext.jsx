@@ -22,6 +22,7 @@ export function UserContextProvider(props) {
     };
 
     const contextData = {
+        userId: currentUser?._id,
         email: currentUser?.email,
         accessToken: currentUser?.accessToken,
         isAuthenticated: Boolean(currentUser?.email),
