@@ -4,15 +4,19 @@ const host = 'http://localhost:3030';
 
 const endpoints = {
     all: (gameId) => `/data/comments?where=gameId%3D%22${gameId}%22`,
-    create: '/data/comments',
+    comments: '/data/comments',
 };
 
 async function getCommentsForGame(gameId) {
-    return requester.get(host + endpoints.all(gameId));
+    const params = new URLSearchParams({
+        where: `gameId="${gameId}"`,
+        load: `author=_ownerId:users`,
+    });
+    return requester.get(`${host}${endpoints.comments}?${params.toString()}`);
 }
 
 async function create(gameId, comment) {
-    return requester.post(host + endpoints.create, { gameId, comment });
+    return requester.post(host + endpoints.comments, { gameId, comment });
 }
 
 const commentsAPI = {

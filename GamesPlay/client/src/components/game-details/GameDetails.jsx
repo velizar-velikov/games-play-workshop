@@ -1,9 +1,11 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useGetOneGame } from '../../hooks/useGames.js';
 import { useCreateComment, useGetComments } from '../../hooks/useComments.js';
 import { useForm } from '../../hooks/useform.js';
 import { useUserContext } from '../../contexts/UserContext.jsx';
-import { useGetUser } from '../../hooks/useAuth.js';
+import ActionBtns from './action-btns/ActionBtns.jsx';
+import CommentCreate from './comment-create/CommentCreate.jsx';
+import CommentItem from './comment-item/CommentItem.jsx';
 
 const initialValues = {
     comment: '',
@@ -15,7 +17,7 @@ export default function GameDetails() {
     const [game, setGame] = useGetOneGame(gameId);
     const [comments, setComments] = useGetComments(gameId);
 
-    const { userId, isAuthenticated } = useUserContext();
+    const { userId, email, isAuthenticated } = useUserContext();
 
     const isOwner = userId == game._ownerId;
     const canComment = isAuthenticated && !isOwner;
@@ -25,6 +27,7 @@ export default function GameDetails() {
     const commentSubmitHandler = async ({ comment }) => {
         try {
             const newComment = await createComment(gameId, comment);
+            newComment.author = { email };
             setComments((oldComments) => [...oldComments, newComment]);
         } catch (error) {
             console.log(error);
@@ -53,50 +56,16 @@ export default function GameDetails() {
                     ) : (
                         <ul>
                             {comments.map((comment) => (
-                                <Comment key={comment._id} {...comment} />
+                                <CommentItem key={comment._id} {...comment} />
                             ))}
                         </ul>
                     )}
                 </div>
 
-                {isOwner && (
-                    <div className="buttons">
-                        <Link to={`/games/${game._id}/edit`} className="button">
-                            Edit
-                        </Link>
-                        <Link to={`/games/${game._id}/delete`} className="button">
-                            Delete
-                        </Link>
-                    </div>
-                )}
+                {isOwner && <ActionBtns gameId={game._id} />}
             </div>
 
-            {canComment && (
-                <article className="create-comment">
-                    <label>Add new comment:</label>
-                    <form onSubmit={submitHandler} className="form">
-                        <textarea
-                            name="comment"
-                            placeholder="Comment......"
-                            value={values.comment}
-                            onChange={changeHandler}
-                        ></textarea>
-                        <input className="btn submit" type="submit" value="Add Comment" />
-                    </form>
-                </article>
-            )}
+            {canComment && <CommentCreate values={values} changeHandler={changeHandler} submitHandler={submitHandler} />}
         </section>
-    );
-}
-
-function Comment({ _ownerId, comment }) {
-    const [user] = useGetUser(_ownerId);
-
-    return (
-        <li className="comment">
-            <p>
-                {user.email}: {comment}
-            </p>
-        </li>
     );
 }
