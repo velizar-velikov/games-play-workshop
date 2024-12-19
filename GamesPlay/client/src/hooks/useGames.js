@@ -48,3 +48,10 @@ export function useCreateGame() {
     const createGameHandler = (gameData) => gamesAPI.create(gameData);
     return createGameHandler;
 }
+export function useDeleteGame() {
+    const deleteGameHandler = (gameId) => {
+        return gamesAPI.deleteById(gameId);
+    };
+
+    return deleteGameHandler;
+}

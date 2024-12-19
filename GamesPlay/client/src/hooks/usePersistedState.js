@@ -5,7 +5,11 @@ export default function usePersistedState(key, initialState) {
         const persistedAuth = localStorage.getItem(key);
 
         if (!persistedAuth) {
-            return typeof initialState == 'function' ? initialState() : initialState;
+            if (typeof initialState == 'function') {
+                return initialState();
+            } else {
+                return initialState;
+            }
         }
 
         return JSON.parse(persistedAuth);
