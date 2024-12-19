@@ -1,16 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import gamesAPI from '../../api/games-api.js';
 import { useForm } from '../../hooks/useform.js';
 import { useEditGame, useGetOneGame } from '../../hooks/useGames.js';
-
-const initialValues = {
-    title: '',
-    category: '',
-    maxLevel: '',
-    imageUrl: '',
-    summary: '',
-};
 
 export default function GameEdit() {
     const navigate = useNavigate();
@@ -27,7 +17,7 @@ export default function GameEdit() {
         }
     };
 
-    const { values, changeHandler, submitHandler } = useForm(Object.assign(initialValues, game), editSubmitHandler);
+    const { values, changeHandler, submitHandler } = useForm(game, editSubmitHandler, { reinitilize: true });
 
     return (
         <section id="edit-page" className="auth">
