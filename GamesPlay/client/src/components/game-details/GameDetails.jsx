@@ -1,15 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useGetOneGame } from '../../hooks/useGames.js';
-import { useCreateComment, useGetComments } from '../../hooks/useComments.js';
-import { useForm } from '../../hooks/useform.js';
+import { useGetComments } from '../../hooks/useComments.js';
 import { useUserContext } from '../../contexts/UserContext.jsx';
 import ActionBtns from './action-btns/ActionBtns.jsx';
 import CommentCreate from './comment-create/CommentCreate.jsx';
 import CommentItem from './comment-item/CommentItem.jsx';
-
-const initialValues = {
-    comment: '',
-};
 
 export default function GameDetails() {
     const { gameId } = useParams();
@@ -21,20 +16,6 @@ export default function GameDetails() {
 
     const isOwner = userId == game._ownerId;
     const canComment = isAuthenticated && !isOwner;
-
-    const createComment = useCreateComment();
-
-    const commentSubmitHandler = async ({ comment }) => {
-        try {
-            const newComment = await createComment(gameId, comment);
-            newComment.author = { email };
-            dispatch({ type: 'ADD_COMMENT', payload: newComment });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const { values, changeHandler, submitHandler } = useForm(initialValues, commentSubmitHandler);
 
     return (
         <section id="game-details">
@@ -65,7 +46,7 @@ export default function GameDetails() {
                 {isOwner && <ActionBtns gameId={game._id} />}
             </div>
 
-            {canComment && <CommentCreate values={values} changeHandler={changeHandler} submitHandler={submitHandler} />}
+            {canComment && <CommentCreate gameId={gameId} email={email} dispatch={dispatch} />}
         </section>
     );
 }

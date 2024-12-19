@@ -2,8 +2,6 @@ import { useEffect, useReducer } from 'react';
 import commentsAPI from '../api/comments-api.js';
 
 function commentsReducer(state, action) {
-    console.log(action);
-
     switch (action.type) {
         case 'GET_ALL':
             return action.payload.slice();
