@@ -43,7 +43,7 @@ export default function GameDetails() {
                     )}
                 </div>
 
-                {isOwner && <ActionBtns gameId={game._id} />}
+                {isOwner && <ActionBtns gameId={game._id} title={game.title} />}
             </div>
 
             {canComment && <CommentCreate gameId={gameId} email={email} dispatch={dispatch} />}
