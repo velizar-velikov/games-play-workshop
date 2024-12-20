@@ -10,6 +10,8 @@ import GameDetails from './components/game-details/GameDetails.jsx';
 import GameEdit from './components/game-edit/GameEdit.jsx';
 import Logout from './components/logout/Logout.jsx';
 import { UserContextProvider } from './contexts/UserContext.jsx';
+import RouteGuard from './components/common/RouteGuard.jsx';
+import PrivateGuard from './components/common/PrivateGuard.jsx';
 
 function App() {
     return (
@@ -21,11 +23,24 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="/logout" element={<Logout />} />
                         <Route path="/games" element={<GamesCatalog />} />
-                        <Route path="/games/create" element={<GameCreate />} />
                         <Route path="/games/:gameId/details" element={<GameDetails />} />
-                        <Route path="/games/:gameId/edit" element={<GameEdit />} />
+
+                        <Route element={<PrivateGuard />}>
+                            <Route path="/logout" element={<Logout />} />
+                            <Route path="/games/create" element={<GameCreate />} />
+                            <Route path="/games/:gameId/edit" element={<GameEdit />} />
+                        </Route>
+                        {/*
+                        different way of using a route guard 
+                        <Route
+                            path="/games/create"
+                            element={
+                                <RouteGuard>
+                                    <GameCreate />
+                                </RouteGuard>
+                            }
+                        /> */}
                     </Routes>
                 </main>
             </UserContextProvider>
